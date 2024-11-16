@@ -70,7 +70,6 @@ export default function Product() {
   };
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
-    fetchProducts(); 
   };
   
   const handleRowsPerPageChange = (value) => {
@@ -82,7 +81,7 @@ export default function Product() {
 
   useEffect(() => {
     fetchProducts();
-  }, [cookies]);
+  }, [cookies, page, rowsPerPage]);
   
   
   return (

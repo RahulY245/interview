@@ -129,7 +129,6 @@ export default function List() {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page); 
-    fetchUserData();
   };
 
   const handleRowsPerPageChange = (value) => {
@@ -140,7 +139,7 @@ export default function List() {
 
   useEffect(() => {
     fetchUserData();
-  }, [cookies.authToken,]);
+  }, [cookies.authToken, currentPage, rowsPerPage]);
   
   return (
     <Layout>
