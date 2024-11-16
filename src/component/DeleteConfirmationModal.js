@@ -1,6 +1,7 @@
 import React from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 
-const DeleteConfirmationModal = ({ open, onClose, onConfirm, userName }) => {
+const DeleteConfirmationModal = ({ open, onClose, onConfirm, userName ,loading}) => {
   if (!open) return null;
 
   return (
@@ -19,10 +20,19 @@ const DeleteConfirmationModal = ({ open, onClose, onConfirm, userName }) => {
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300 flex items-center gap-2"
-          >
-            <span>Delete</span>
-          </button>
+            disabled={loading}
+            className={`px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300 flex items-center gap-2 ${
+                loading ? "cursor-not-allowed" : ""
+            }`}
+            >
+            {loading ? (
+                <span className="flex items-center">
+                <CircularProgress size={20} className="text-white mr-2" />
+                </span>
+            ) : (
+                <span>Delete</span>
+            )}
+            </button>
         </div>
       </div>
     </div>

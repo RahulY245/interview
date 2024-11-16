@@ -4,22 +4,19 @@ import React, { useState, useEffect } from "react";
 export default function PersonalDetails({ formik }) {
   const img = "https://images.unsplash.com/photo-1531316282956-d38457be0993?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80" 
   const [profileImage, setProfileImage] = useState(img);
-  // This useEffect ensures that the profileImage is set from formik if already selected
   useEffect(() => {
     if (formik.values.photo) {
       const objectURL = URL.createObjectURL(formik.values.photo);
       setProfileImage(objectURL);
     } else if (img) {
-      // Fetch image from URL and convert to File object
+
       const fetchImage = async () => {
-        const response = await fetch(img);  // Fetch the image from URL
-        const blob = await response.blob();  // Convert it to a Blob object
-        const file = new File([blob], "image.jpg", { type: blob.type });  // Create a File from the Blob
-  
-        // Set the file into Formik form field
+        const response = await fetch(img);
+        const blob = await response.blob(); 
+        const file = new File([blob], "image.jpg", { type: blob.type }); 
+
         formik.setFieldValue("photo", file);
         
-        // Optionally, set a preview URL for the image
         const objectURL = URL.createObjectURL(file);
         setProfileImage(objectURL);
       };

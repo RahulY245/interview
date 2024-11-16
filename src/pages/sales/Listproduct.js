@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function Product() {
   const [data, setData] = useState([]);
-  const [cookies] = useCookies(["authToken"]); // Replace "authToken" with the actual cookie key if different
+  const [cookies] = useCookies(["authToken"]); 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
@@ -52,7 +52,7 @@ export default function Product() {
         }
       );
   
-      const { data: products, total, perPage, lastPage } = response.data;
+      const { data: products, lastPage } = response.data;
   
       const formattedData = products.map((product, index) => ({
         srno: (page - 1) * rowsPerPage + index + 1,
@@ -70,6 +70,7 @@ export default function Product() {
   };
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
+    fetchProducts(); 
   };
   
   const handleRowsPerPageChange = (value) => {
@@ -81,7 +82,7 @@ export default function Product() {
 
   useEffect(() => {
     fetchProducts();
-  }, [cookies, page, rowsPerPage]);
+  }, [cookies]);
   
   
   return (
@@ -101,7 +102,6 @@ export default function Product() {
               Add Product
             </Link>
           </div>
-          {/* <Table cols={columns} data={data} /> */}
           <Table
             cols={columns}
             data={data}

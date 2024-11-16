@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-
-/* eslint-disable react/prop-types */
 const Table = ({
   cols,
   data,
@@ -16,7 +14,6 @@ const Table = ({
   isTableLoading,
   rowsPerPage,
   setRowsPerPage,
-  fetchData
 }) => {
   // const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
@@ -105,7 +102,6 @@ const Table = ({
   const handleChangeRowsPerPage = (event) => {
     const value = parseInt(event.target.value, 10);
     setRowsPerPage(value);
-    // fetchData(value);
     handleRowsPerPageChange(value);
   };
 

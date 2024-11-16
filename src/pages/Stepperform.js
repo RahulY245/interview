@@ -13,13 +13,16 @@ import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const steps = ['Personal Information', 'Details', 'Skills Details', 'Credential Details'];
 
 export default function Stepperform() {
   const [activeStep, setActiveStep] = useState(0);
-  const [cookies, setCookie] = useCookies(["authToken"]);
-  // Step validation schemas
+  const [cookies] = useCookies(["authToken"]);
+  const [loading, setLoading]=useState(false)
+
   const stepSchemas = [
     Yup.object({
       name: Yup.string().required("Name is required"),
@@ -58,9 +61,8 @@ export default function Stepperform() {
     },
     validationSchema: stepSchemas[activeStep],
     onSubmit: async (values) => {
-      console.log("values::::::values",values);
+      setLoading(true)
       if (activeStep === steps.length - 1) {
-        // Call the API for registration
         const formData = new FormData();
         formData.append('name', values.name);
         formData.append('email', values.email);
@@ -87,14 +89,17 @@ export default function Stepperform() {
             }
           );
           console.log("Registration Success:", response.data);
+          setLoading(false)
           toast.success("Registration Successful!");
           formik.resetForm()
         } catch (error) {
+          setLoading(false)
           console.error("Registration failed:", error);
           toast.error( error?.response?.data?.message[0] ||  "Error in Registration." );
 
         }
       } else {
+        setLoading(false)
         handleNext();
       }
     },
@@ -149,9 +154,20 @@ export default function Stepperform() {
               >
                 Back
               </Button>
-              <Button type="submit" variant="contained" color="primary">
-                {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={loading}
+                className="flex items-center"
+              >
+                {loading ? (
+                  <CircularProgress size={24} className="mr-2" />
+                ) : (
+                  activeStep === steps.length - 1 ? 'Submit' : 'Next'
+                )}
               </Button>
+
             </div>
           </form>
         )}

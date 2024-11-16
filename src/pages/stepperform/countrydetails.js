@@ -8,9 +8,8 @@ export default function CountryDetails({ formik }) {
   const [countryOptions, setCountryOptions] = useState([]);
   const [stateOptions, setStateOptions] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [cookies, setCookie] = useCookies(["authToken", "userType"]);
+  const [cookies] = useCookies(["authToken", "userType"]);
 
-  // Fetch country data when component mounts
   useEffect(() => {
     axios
       .get(
@@ -20,7 +19,7 @@ export default function CountryDetails({ formik }) {
         }
       )
       .then((response) => {
-        console.log("Fetched Countries:", response.data); // Log the response data
+        console.log("Fetched Countries:", response.data); 
         const countries = response.data.data.map((country) => ({
           value: country.id,
           label: country.name,

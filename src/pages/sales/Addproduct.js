@@ -8,10 +8,12 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function AddProduct() {
   const [cookies] = useCookies(["authToken"]);
   const [imageError, setImageError] = useState("");
+  const [loading, setLoading]=useState(false)
 
   const formik = useFormik({
     initialValues: {
@@ -28,7 +30,7 @@ export default function AddProduct() {
     }),
     onSubmit: async (values) => {
       const file = values.productImage;
-
+      setLoading(true)
       if (file && file.size > 2048 * 1024) {
         setImageError("The image must not be greater than 2048 kilobytes.");
         toast.error("Image size exceeds 2 MB!");
@@ -56,8 +58,10 @@ export default function AddProduct() {
         );
         toast.success("Product added successfully!");
         console.log("Product added:", response.data);
+        setLoading(false)
         formik.resetForm()
       } catch (error) {
+        setLoading(false)
         toast.error(error.response?.data?.message || "Failed to add product!");
         console.error("Error adding product:", error.response ? error.response.data : error.message);
       }
@@ -133,7 +137,7 @@ export default function AddProduct() {
                 </label>
               </div>
               {formik.touched.productImage && formik.errors.productImage ? (
-                <p className="text-red-500 text-xs">{formik.errors.productImage}</p>
+                <p className="text-red-500 text-xs text-left">{formik.errors.productImage}</p>
               ) : null}
               {imageError && (
                 <p className="text-red-500 text-xs">{imageError}</p>
@@ -171,7 +175,7 @@ export default function AddProduct() {
                 onChange={formik.handleChange}
               />
               {formik.touched.price && formik.errors.price ? (
-                <p className="text-red-500 text-xs">{formik.errors.price}</p>
+                <p className="text-red-500 text-xs text-left">{formik.errors.price}</p>
               ) : null}
             </div>
 
@@ -185,9 +189,16 @@ export default function AddProduct() {
               </Link>
               <button
                 type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                disabled={loading}
+                className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 flex items-center justify-center`}
               >
-                Submit
+                {loading ? (
+                  <span className="flex items-center">
+                    <CircularProgress size={24} className="mr-2 text-white" />
+                  </span>
+                ) : (
+                  "Submit"
+                )}
               </button>
             </div>
           </form>

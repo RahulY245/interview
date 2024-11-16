@@ -1,16 +1,18 @@
 
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useCookies } from "react-cookie"; 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Login() {
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies(["authToken", "userType"]);
+  const [loading, setLoading]=useState(false)
 
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email address").required("Email is required"),
@@ -24,11 +26,13 @@ export default function Login() {
     },
     validationSchema,
     onSubmit: async (values) => {
+      setLoading(true)
       try {
         const response = await axios.post(
           "https://reactinterviewtask.codetentaclestechnologies.tech/api/api/login",
           values
         );
+
         if (response.data && response.data.token) {
           toast.success("Login successful!");
           setCookie("authToken", response.data.token , { path: "/", expires: new Date(Date.now() + 1 * 60 * 60 * 1000) }
@@ -36,12 +40,14 @@ export default function Login() {
           setCookie("role", response.data.role, { path: "/", expires: new Date(Date.now() + 1 * 60 * 60 * 1000) }
         ); 
         response.data.role === "Admin" ? navigate("/List") : navigate("/Product")
-          
+        setLoading(false)
           formik.resetForm();
         } else {
+          setLoading(false)
           toast.error("Invalid login response. Please try again.");
         }
       } catch (error) {
+        setLoading(false)
         toast.error(error.response?.data?.message || "Login failed. Please try again.");
       }
     },
@@ -101,12 +107,21 @@ export default function Login() {
                   ) : null}
                 </div>
                 <div className="mb-6 text-center">
-                  <button
-                    type="submit"
-                    className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  >
-                    Login
-                  </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`w-full flex items-center justify-center ${
+                    loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700"
+                  } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`}
+                >
+                  {loading ? (
+                    <span className="flex items-center">
+                      <CircularProgress size={24} className="mr-2 text-white" />
+                    </span>
+                  ) : (
+                    "Login"
+                  )}
+                </button>
                 </div>
               </form>
             </div>
