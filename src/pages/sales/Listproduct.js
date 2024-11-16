@@ -46,7 +46,7 @@ export default function Product() {
       }
   
       const response = await axios.get(
-        `https://reactinterviewtask.codetentaclestechnologies.tech/api/api/product-list?page=${page}&per_page=${rowsPerPage}`,
+        `https://reactinterviewtask.codetentaclestechnologies.tech/api/api/product-list?page=${page}&perPage=${rowsPerPage}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

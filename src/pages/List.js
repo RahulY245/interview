@@ -235,7 +235,7 @@ export default function List() {
           },
           params: {
             page: currentPage, 
-            per_page: rowsPerPage, 
+            perPage: rowsPerPage, 
           },
         });
 
@@ -321,9 +321,12 @@ export default function List() {
             totalPages={totalPages} 
             page={currentPage} 
             handlePageChange={handlePageChange}
+            setRowsPerPage={setRowsPerPage}
+            fetchData={fetchUserData}
             rowsPerPage={rowsPerPage}
             handleRowsPerPageChange={handleRowsPerPageChange} 
             isTableLoading={!data.length} 
+
           />
         </div>
       </div>

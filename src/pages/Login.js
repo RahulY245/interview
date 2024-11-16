@@ -35,7 +35,8 @@ export default function Login() {
         );
           setCookie("role", response.data.role, { path: "/", expires: new Date(Date.now() + 1 * 60 * 60 * 1000) }
         ); 
-          navigate("/List");
+        response.data.role === "Admin" ? navigate("/List") : navigate("/Product")
+          
           formik.resetForm();
         } else {
           toast.error("Invalid login response. Please try again.");

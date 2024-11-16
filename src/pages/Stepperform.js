@@ -91,7 +91,8 @@ export default function Stepperform() {
           formik.resetForm()
         } catch (error) {
           console.error("Registration failed:", error);
-          toast.error("Error in Registration.");
+          toast.error( error?.response?.data?.message[0] ||  "Error in Registration." );
+
         }
       } else {
         handleNext();

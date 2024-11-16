@@ -15,7 +15,8 @@ const Table = ({
   handleRowsPerPageChange,
   isTableLoading,
   rowsPerPage,
-  setRowsPerPage
+  setRowsPerPage,
+  fetchData
 }) => {
   // const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
@@ -104,6 +105,7 @@ const Table = ({
   const handleChangeRowsPerPage = (event) => {
     const value = parseInt(event.target.value, 10);
     setRowsPerPage(value);
+    // fetchData(value);
     handleRowsPerPageChange(value);
   };
 
