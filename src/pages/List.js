@@ -113,6 +113,7 @@ export default function List() {
         if (response.status === 200) {
           setData(prevData => prevData.filter(user => user.id !== deleteUserId));
           toast.success("User deleted successfully!");
+          fetchUserData();
           setLoading(false)
         } else {
             setLoading(false)
