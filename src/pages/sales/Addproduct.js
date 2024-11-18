@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import Layout from "../../component/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function AddProduct() {
+  const navigate = useNavigate();
   const [cookies] = useCookies(["authToken"]);
   const [imageError, setImageError] = useState("");
   const [loading, setLoading]=useState(false)
@@ -60,6 +61,7 @@ export default function AddProduct() {
         console.log("Product added:", response.data);
         setLoading(false)
         formik.resetForm()
+        navigate("/Product")
       } catch (error) {
         setLoading(false)
         toast.error(error.response?.data?.message || "Failed to add product!");

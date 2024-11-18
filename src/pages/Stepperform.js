@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { Stepper, Step, StepLabel, Button, Typography } from '@mui/material';
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from 'axios'; // import axios
+import axios from 'axios';
 import Personaldetails from "./stepperform/personaldetails";
 import Countrydetails from "./stepperform/countrydetails";
 import Skillsdetails from "./stepperform/skillsdetails";
 import Credentaildetails from "./stepperform/credentaildetails";
 import Layout from "../component/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +19,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 const steps = ['Personal Information', 'Details', 'Skills Details', 'Credential Details'];
 
 export default function Stepperform() {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [cookies] = useCookies(["authToken"]);
   const [loading, setLoading]=useState(false)
@@ -68,7 +69,7 @@ export default function Stepperform() {
         formData.append('email', values.email);
         formData.append('password', values.password);
         formData.append('password_confirmation', values.confirmPassword);
-        formData.append('skills', values.skills.join(',')); // Joining skills into a single string
+        formData.append('skills', values.skills.join(',')); 
         formData.append('gender', values.gender);
         formData.append('phoneNumber', values.phoneNumber);
         formData.append('token', cookies.authToken);
@@ -92,6 +93,7 @@ export default function Stepperform() {
           setLoading(false)
           toast.success("Registration Successful!");
           formik.resetForm()
+          navigate("/List")
         } catch (error) {
           setLoading(false)
           console.error("Registration failed:", error);
