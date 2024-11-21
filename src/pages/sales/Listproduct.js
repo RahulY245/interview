@@ -4,7 +4,7 @@ import { useCookies } from "react-cookie";
 import Table from "../../component/VTable";
 import Layout from "../../component/Layout";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { fetchProducts } from "../../services/api";
 
 export default function Product() {
   const [data, setData] = useState([]);
@@ -13,7 +13,6 @@ export default function Product() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
 
-  
   const columns = [
     { title: "#", dataIndex: "srno", key: "srno" },
     { title: "Product Name", dataIndex: "name", key: "name" },
@@ -37,23 +36,19 @@ export default function Product() {
     { title: "Price", dataIndex: "price", key: "price" },
   ];
 
-  const fetchProducts = async () => {
+
+  const fetchProductsData = async () => {
     try {
       const token = cookies.authToken;
       if (!token) {
         console.error("Token not found in cookies!");
         return;
       }
-  
-      const response = await axios.get(
-        `https://reactinterviewtask.codetentaclestechnologies.tech/api/api/product-list?page=${page}&perPage=${rowsPerPage}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-  
+
+      const response = await fetchProducts(page, rowsPerPage);
+
       const { data: products, lastPage } = response.data;
-  
+
       const formattedData = products.map((product, index) => ({
         srno: (page - 1) * rowsPerPage + index + 1,
         name: product.name,
@@ -61,29 +56,28 @@ export default function Product() {
         description: product.description,
         price: `Rs.${product.price}/-`,
       }));
-  
+
       setData(formattedData);
       setTotalPages(lastPage);
     } catch (error) {
       console.error("Failed to fetch products:", error);
     }
   };
+
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-  
+
   const handleRowsPerPageChange = (value) => {
     setRowsPerPage(value);
     setPage(1);
-    fetchProducts(); 
+    fetchProductsData();  
   };
-  
 
   useEffect(() => {
-    fetchProducts();
+    fetchProductsData();
   }, [cookies, page, rowsPerPage]);
-  
-  
+
   return (
     <Layout>
       <div className="bg-white p-4 mb-2 rounded-lg dark:border-gray-700 mt-14">
@@ -111,8 +105,7 @@ export default function Product() {
             setRowsPerPage={setRowsPerPage}
             handleRowsPerPageChange={handleRowsPerPageChange}
             isTableLoading={!data.length} 
-            />
-
+          />
         </div>
       </div>
     </Layout>

@@ -9,6 +9,7 @@ import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from '@mui/material/CircularProgress';
+import { addProduct } from "../../services/api";
 
 export default function AddProduct() {
   const navigate = useNavigate();
@@ -48,15 +49,7 @@ export default function AddProduct() {
       formData.append("token", cookies.authToken);
 
       try {
-        const response = await axios.post(
-          "https://reactinterviewtask.codetentaclestechnologies.tech/api/api/add-product",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response =await addProduct(formData)
         toast.success("Product added successfully!");
         console.log("Product added:", response.data);
         setLoading(false)
@@ -209,3 +202,4 @@ export default function AddProduct() {
     </Layout>
   );
 }
+

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { fetchCountries, fetchStates } from "../../services/api";
 
 export default function CountryDetails({ formik }) {
   const [countryOptions, setCountryOptions] = useState([]);
@@ -11,13 +12,7 @@ export default function CountryDetails({ formik }) {
   const [cookies] = useCookies(["authToken", "userType"]);
 
   useEffect(() => {
-    axios
-      .get(
-        "https://reactinterviewtask.codetentaclestechnologies.tech/api/api/country-list",
-        {
-          headers: { Authorization: `Bearer ${cookies.authToken}` },
-        }
-      )
+     fetchCountries()
       .then((response) => {
         console.log("Fetched Countries:", response.data); 
         const countries = response.data.data.map((country) => ({
@@ -32,13 +27,7 @@ export default function CountryDetails({ formik }) {
   
   useEffect(() => {
     if (selectedCountry) {
-      axios
-        .get(
-          `https://reactinterviewtask.codetentaclestechnologies.tech/api/api/state-list?country_id=${selectedCountry.value}`,
-          {
-            headers: { Authorization: `Bearer ${cookies.authToken}` },
-          }
-        )
+       fetchStates(selectedCountry.value)
         .then((response) => {
           const states = response.data.data.map((state) => ({
             value: state.id,

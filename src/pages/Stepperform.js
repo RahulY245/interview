@@ -14,6 +14,7 @@ import { useCookies } from "react-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CircularProgress from '@mui/material/CircularProgress';
+import { registerUser } from "../services/api";
 
 
 const steps = ['Personal Information', 'Details', 'Skills Details', 'Credential Details'];
@@ -80,15 +81,7 @@ export default function Stepperform() {
         }
         
         try {
-          const response = await axios.post(
-            'https://reactinterviewtask.codetentaclestechnologies.tech/api/api/register',
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data', 
-              },
-            }
-          );
+          const response = await registerUser(formData);
           console.log("Registration Success:", response.data);
           setLoading(false)
           toast.success("Registration Successful!");
